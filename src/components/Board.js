@@ -52,24 +52,29 @@ const Board = () => {
     let colList = [col1, col2, col3];
     let diag1 = [row1[0], row2[1], row3[2]];
     let diag2 = [row1[2], row2[1], row3[0]];
+    const checkEveryValue = (item, i) => item.value === i;
+
+    const isWinnerRowCol = (element) => {
+      element.every((item) => checkEveryValue(item, 1))
+        ? setCurrentWinner(1)
+        : element.every((item) => checkEveryValue(item, 2)) &&
+          setCurrentWinner(2);
+    };
+    const isWinnerDiag = (element) => {
+      element.every((item) => checkEveryValue(item, 1))
+        ? setCurrentWinner(1)
+        : element.every((item) => checkEveryValue(item, 2)) &&
+          setCurrentWinner(2);
+    };
 
     rowList.forEach((row) => {
-      row.every((item) => item.value === 1)
-        ? setCurrentWinner(1)
-        : row.every((item) => item.value === 2) && setCurrentWinner(2);
+      isWinnerRowCol(row);
     });
     colList.forEach((col) => {
-      col.every((item) => item.value === 1)
-        ? setCurrentWinner(1)
-        : col.every((item) => item.value === 2) && setCurrentWinner(2);
+      isWinnerRowCol(col);
     });
 
-    diag1.every((item) => item.value === 1)
-      ? setCurrentWinner(1)
-      : (diag1.every((item) => item.value === 2) && setCurrentWinner(2)) ||
-        diag2.every((item) => item.value === 1)
-      ? setCurrentWinner(1)
-      : diag2.every((item) => item.value === 2) && setCurrentWinner(2);
+    isWinnerDiag(diag1) || isWinnerDiag(diag2);
   };
 
   const changeScore = (id) => {
