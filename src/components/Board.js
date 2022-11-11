@@ -1,31 +1,23 @@
 import React from "react";
+import Button from "./Button";
 import { useState } from "react";
+import { useEffect } from "react";
 
-const Board = () => {
-  let updateScore = () => {
-    if (currentWinner) {
-      let newScore = playerScore;
-      let emptyArr = [];
-      newScore.forEach((item) => {
-        if (item.id === currentWinner) {
-          let newObj = { id: item.id, score: item.score + 1 };
-          emptyArr.push(newObj);
-        } else {
-          let newObj = { id: item.id, score: item.score };
-          emptyArr.push(newObj);
-        }
-      });
-
-      setPlayerScore(emptyArr);
-    }
+const Board = ({
+  playerScore,
+  setPlayerScore,
+  currentPlayers,
+  setCurrentPlayers,
+}) => {
+  const findPlayerByTurn = (data, turn) => {
+    const foundPlayer = data.find((item) => item.player === turn);
+    return foundPlayer;
   };
 
   const [turn, setTurn] = useState(1);
+  const [activePlayer, setActivePlayer] = useState();
   const [currentWinner, setCurrentWinner] = useState("");
-  const [playerScore, setPlayerScore] = useState([
-    { id: 1, score: 0 },
-    { id: 2, score: 0 },
-  ]);
+
   const [scoreBoard, setScoreBoard] = useState([
     { id: 0, row: 1, col: 1, value: 0 },
     { id: 1, row: 1, col: 2, value: 0 },
@@ -37,10 +29,17 @@ const Board = () => {
     { id: 7, row: 3, col: 2, value: 0 },
     { id: 8, row: 3, col: 3, value: 0 },
   ]);
-  const switchTurns = () => {
-    turn === 1 ? setTurn(2) : setTurn(1);
-  };
+  useEffect(() => {
+    setActivePlayer(() => findPlayerByTurn(currentPlayers, 1));
+  }, []);
 
+  const changeTurn = (turn) => {
+    setTurn(turn);
+    setActivePlayer(() => findPlayerByTurn(currentPlayers, turn));
+  };
+  const switchTurns = () => {
+    turn === 1 ? changeTurn(2) : changeTurn(1);
+  };
   const checkForWinner = () => {
     let row1 = scoreBoard.filter((item) => item.row === 1);
     let row2 = scoreBoard.filter((item) => item.row === 2);
@@ -54,17 +53,33 @@ const Board = () => {
     let diag2 = [row1[2], row2[1], row3[0]];
     const checkEveryValue = (item, i) => item.value === i;
 
+    const setWinnerOjb = (players, turn) => {
+      let nextTurn;
+      turn === 1 ? (nextTurn = 2) : (nextTurn = 1);
+
+      setCurrentWinner(() => findPlayerByTurn(players, turn));
+      const winner = findPlayerByTurn(players, turn);
+      const looser = findPlayerByTurn(players, nextTurn);
+      winner.data.score++;
+      winner.data.gamesPlayed++;
+      looser.data.gamesPlayed++;
+      let newCurrentPlayers = [winner, looser];
+      let sortedPlayers = newCurrentPlayers.sort((a, b) => a.player - b.player);
+      setCurrentPlayers(sortedPlayers);
+      console.log("winner", winner, "looser", looser);
+    };
+
     const isWinnerRowCol = (element) => {
       element.every((item) => checkEveryValue(item, 1))
-        ? setCurrentWinner(1)
+        ? setWinnerOjb(currentPlayers, 1)
         : element.every((item) => checkEveryValue(item, 2)) &&
-          setCurrentWinner(2);
+          setWinnerOjb(currentPlayers, 2);
     };
     const isWinnerDiag = (element) => {
       element.every((item) => checkEveryValue(item, 1))
-        ? setCurrentWinner(1)
+        ? setWinnerOjb(currentPlayers, 1)
         : element.every((item) => checkEveryValue(item, 2)) &&
-          setCurrentWinner(2);
+          setWinnerOjb(currentPlayers, 2);
     };
 
     rowList.forEach((row) => {
@@ -81,14 +96,12 @@ const Board = () => {
     let newScoreBoard = scoreBoard;
     newScoreBoard[id].value = turn;
     setScoreBoard(newScoreBoard);
-    console.log(newScoreBoard);
     switchTurns();
     checkForWinner();
-    console.log(playerScore);
   };
 
   const reset = () => {
-    setTurn(1);
+    changeTurn(1);
     setScoreBoard([
       { id: 0, row: 1, col: 1, value: 0 },
       { id: 1, row: 1, col: 2, value: 0 },
@@ -104,37 +117,21 @@ const Board = () => {
   };
 
   return (
-    <div className=" w-96 mx-auto mt-10 bg-slate-400 flex flex-col">
+    <div className="  mt-10 bg-slate-400 flex flex-col">
+      <div className="flex justify-around "></div>
       <h1 className="text-center text-white p-5">
         {currentWinner
-          ? `The winner is player${currentWinner}`
-          : `Player${turn} turn!`}
+          ? `The winner is ${currentWinner.data.username}`
+          : activePlayer && `${activePlayer.data.username} turn!`}
       </h1>
       <div className="grid grid-cols-3">
         {scoreBoard.map((item) => (
-          <button
+          <Button
+            item={item}
+            changeScore={changeScore}
+            currentWinner={currentWinner}
             key={item.id}
-            className="border w-titleW h-titleH"
-            onClick={() => changeScore(item.id)}
-            value={item}
-            disabled={item.value > 0 ? true : currentWinner ? true : false}
-          >
-            {item.value === 0 ? (
-              item.id
-            ) : item.value === 1 ? (
-              <img
-                className=" w-full h-full"
-                src="./imgs/cross.png"
-                alt="cross"
-              ></img>
-            ) : (
-              <img
-                className=" w-full h-full"
-                src="./imgs/zero.png"
-                alt="zero"
-              ></img>
-            )}
-          </button>
+          />
         ))}
       </div>
       {!currentWinner ? (
@@ -146,12 +143,12 @@ const Board = () => {
           className="p-10"
           onClick={() => {
             reset();
-            updateScore();
           }}
         >
           Play Again!
         </button>
       )}
+      <button>testy</button>
     </div>
   );
 };
