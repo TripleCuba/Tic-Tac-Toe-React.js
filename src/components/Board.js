@@ -2,6 +2,7 @@ import React from "react";
 import Button from "./Button";
 import { useState } from "react";
 import { useEffect } from "react";
+import { updatePlayer } from "../utilities/apiCalls";
 
 const Board = ({
   playerScore,
@@ -63,6 +64,8 @@ const Board = ({
       winner.data.score++;
       winner.data.gamesPlayed++;
       looser.data.gamesPlayed++;
+      updatePlayer(winner);
+      updatePlayer(looser);
       let newCurrentPlayers = [winner, looser];
       let sortedPlayers = newCurrentPlayers.sort((a, b) => a.player - b.player);
       setCurrentPlayers(sortedPlayers);

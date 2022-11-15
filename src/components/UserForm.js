@@ -42,14 +42,17 @@ const UserForm = ({ currentPlayers, setCurrentPlayers }) => {
     }
   };
   return (
-    <div>
+    <div className="text-center">
+      <h1 className="font-BRS text-4xl my-10 ">
+        Enter {playerIdNumb === 1 ? "Player1" : "Player2"} username
+      </h1>
       <form
         method="post"
-        className="flex flex-col border text-center bg-slate-200"
+        className="flex flex-col font-mono gap-5 text-xl my-10 "
       >
         <label htmlFor="Username">Player Username</label>
         <input
-          className="text-center"
+          className="text-center w-4/6 mx-auto shadow-md"
           type="text"
           required
           placeholder={`Player${playerId}`}
@@ -57,7 +60,10 @@ const UserForm = ({ currentPlayers, setCurrentPlayers }) => {
           value={userName}
         />
 
-        <button onClick={createPlayer}>
+        <button
+          className="p-4 border rounded-2xl font-BRS text-3xl w-4/6 mx-auto my-8 bg-slate-50 hover:bg-slate-300"
+          onClick={createPlayer}
+        >
           {playerIdNumb === 1 ? "Add Player1" : "Let's Play!"}
         </button>
       </form>

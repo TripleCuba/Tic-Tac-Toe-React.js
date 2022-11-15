@@ -5,6 +5,9 @@ module.exports = {
     extend: {
       width: { titleW: "128px" },
       height: { titleH: "128px" },
+      fontFamily: {
+        BRS: "BRS",
+      },
     },
   },
   plugins: [],

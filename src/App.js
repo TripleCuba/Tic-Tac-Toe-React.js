@@ -5,6 +5,7 @@ import UserForm from "./components/UserForm";
 import { Route, Routes } from "react-router";
 import { Link } from "react-router-dom";
 import PlayerInfo from "./components/PlayerInfo";
+import Home from "./components/Home";
 
 function App() {
   const [newPlayer, setNewPlayer] = useState();
@@ -14,14 +15,7 @@ function App() {
   return (
     <div className="w-96 mx-auto ">
       <Routes>
-        <Route
-          path="/"
-          element={
-            <Link to="/playerLogin/1">
-              <button>Let's get started </button>
-            </Link>
-          }
-        />
+        <Route path="/" element={<Home currentPlayers={currentPlayers} />} />
         <Route
           path="/playerLogin/:playerId"
           element={
@@ -50,6 +44,9 @@ function App() {
       </Link>
       <Link className="border bg-slate-500" to="/playerLogin/2">
         Player 2 login
+      </Link>
+      <Link className="border bg-slate-500" to="/">
+        home
       </Link>
     </div>
   );
