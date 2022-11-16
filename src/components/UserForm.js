@@ -30,7 +30,6 @@ const UserForm = ({
         data: fetchedPlayer,
       };
 
-      console.log("fetched player", playerObj);
       setCurrentPlayers([...currentPlayers, playerObj]);
     } else {
       const resp = await postData({ username: userName });

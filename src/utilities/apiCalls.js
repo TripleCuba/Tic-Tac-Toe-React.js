@@ -16,6 +16,6 @@ export const updatePlayer = async (player) => {
   const playerURL = URL + player.data._id;
 
   const resp = await axios.patch(playerURL, player.data);
-  console.log(resp);
+
   return resp.data;
 };
