@@ -2,16 +2,13 @@ import "./App.css";
 import Board from "./components/Board";
 import { useState } from "react";
 import UserForm from "./components/UserForm";
-import { json, Route, Routes } from "react-router";
-import { Link } from "react-router-dom";
-import PlayerInfo from "./components/PlayerInfo";
+import { Route, Routes } from "react-router";
 import Home from "./components/Home";
 import ErrorPage from "./components/ErrorPage";
 import { useEffect } from "react";
 
 function App() {
   const [newPlayer, setNewPlayer] = useState();
-  const [playerScore, setPlayerScore] = useState([]);
   const [currentPlayers, setCurrentPlayers] = useState([]);
   let newList = [];
   const getPlayersFromLocal = () => {
@@ -20,8 +17,6 @@ function App() {
       let newPlayer = JSON.parse(localStorage.getItem(`Player${i}`));
       newPlayer !== null && newList.push(newPlayer);
     }
-
-    console.log(newList);
   };
   const getCurrentPlayerFromLocal = () => {
     getPlayersFromLocal();
