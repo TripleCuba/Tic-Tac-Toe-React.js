@@ -43,6 +43,7 @@ function App() {
               setNewPlayer={setNewPlayer}
               currentPlayers={currentPlayers}
               setCurrentPlayers={setCurrentPlayers}
+              getCurrentPlayerFromLocal={getCurrentPlayerFromLocal}
             />
           }
         />
@@ -53,30 +54,12 @@ function App() {
             <Board
               setCurrentPlayers={setCurrentPlayers}
               currentPlayers={currentPlayers}
+              getCurrentPlayerFromLocal={getCurrentPlayerFromLocal}
             />
           }
         />
         <Route path="*" element={<ErrorPage />} />
       </Routes>
-      <PlayerInfo
-        currentPlayers={currentPlayers}
-        getCurrentPlayerFromLocal={getCurrentPlayerFromLocal}
-      />
-      <Link className="border bg-slate-500" to="/playerLogin/1">
-        Player 1 login
-      </Link>
-      <Link className="border bg-slate-500" to="/playerLogin/2">
-        Player 2 login
-      </Link>
-      <Link className="border bg-slate-500" to="/">
-        home
-      </Link>
-      <button
-        className="p-1 border bg-slate-200"
-        onClick={() => console.log(JSON.parse(localStorage.getItem("Player1")))}
-      >
-        Test
-      </button>
     </div>
   );
 }

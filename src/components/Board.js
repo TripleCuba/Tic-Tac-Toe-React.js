@@ -1,11 +1,16 @@
 import React from "react";
 import Button from "./Button";
 import { useState, useEffect } from "react";
-
+import PlayerInfo from "./PlayerInfo";
 import { updatePlayer } from "../utilities/apiCalls";
 import { useNavigate } from "react-router";
+import { Link } from "react-router-dom";
 
-const Board = ({ currentPlayers, setCurrentPlayers }) => {
+const Board = ({
+  currentPlayers,
+  setCurrentPlayers,
+  getCurrentPlayerFromLocal,
+}) => {
   let navigate = useNavigate();
   const findPlayerByTurn = (data, turn) => {
     const foundPlayer = data.find((item) => item.player === turn);
@@ -122,37 +127,42 @@ const Board = ({ currentPlayers, setCurrentPlayers }) => {
   };
 
   return (
-    <div className="  mt-10 bg-slate-400 flex flex-col rounded-md">
-      <div className="flex justify-around "></div>
-      <h1 className="text-center text-white p-5">
-        {currentWinner
-          ? `The winner is ${currentWinner.data.username}`
-          : activePlayer && `${activePlayer.data.username} turn!`}
-      </h1>
-      <div className="grid grid-cols-3">
-        {scoreBoard.map((item) => (
-          <Button
-            item={item}
-            changeScore={changeScore}
-            currentWinner={currentWinner}
-            key={item.id}
-          />
-        ))}
-      </div>
-      {!currentWinner ? (
-        <button className="p-10  hover:bg-slate-300" onClick={reset}>
-          Reset!
-        </button>
-      ) : (
+    <div>
+      <div className="  mt-10 bg-slate-400 flex flex-col rounded-md">
+        <div className="flex justify-around "></div>
+        <h1 className="text-center text-white p-5">
+          {currentWinner
+            ? `The winner is ${currentWinner.data.username}`
+            : activePlayer && `${activePlayer.data.username} turn!`}
+        </h1>
+        <div className="grid grid-cols-3">
+          {scoreBoard.map((item) => (
+            <Button
+              item={item}
+              changeScore={changeScore}
+              currentWinner={currentWinner}
+              key={item.id}
+            />
+          ))}
+        </div>
+
         <button
-          className="p-10  hover:bg-slate-300"
-          onClick={() => {
-            reset();
-          }}
+          className="p-10  hover:bg-slate-300 hover:rounded-b-md text-2xl text-white"
+          onClick={reset}
         >
-          Play Again!
+          {!currentWinner ? "Reset!" : "Play Again!"}
         </button>
-      )}
+      </div>
+
+      <PlayerInfo
+        currentPlayers={currentPlayers}
+        getCurrentPlayerFromLocal={getCurrentPlayerFromLocal}
+      />
+      <Link to="/">
+        <button className="p-5 w-full my-4 bg-slate-400 hover:bg-slate-300 text-2xl rounded">
+          Home
+        </button>
+      </Link>
     </div>
   );
 };

@@ -4,8 +4,13 @@ import { useState } from "react";
 import { postData, getPlayerByName } from "../utilities/apiCalls";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import PlayerInfo from "./PlayerInfo";
 
-const UserForm = ({ currentPlayers, setCurrentPlayers }) => {
+const UserForm = ({
+  currentPlayers,
+  setCurrentPlayers,
+  getCurrentPlayerFromLocal,
+}) => {
   let navigate = useNavigate();
   let { playerId } = useParams();
   let playerIdNumb = Number(playerId);
@@ -93,6 +98,10 @@ const UserForm = ({ currentPlayers, setCurrentPlayers }) => {
           {playerIdNumb === 1 ? "Add Player1" : "Add Player2"}
         </button>
       </form>
+      <PlayerInfo
+        currentPlayers={currentPlayers}
+        getCurrentPlayerFromLocal={getCurrentPlayerFromLocal}
+      />
     </div>
   );
 };
