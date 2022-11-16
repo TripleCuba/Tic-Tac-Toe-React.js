@@ -1,15 +1,12 @@
 import React from "react";
 import Button from "./Button";
-import { useState } from "react";
-import { useEffect } from "react";
-import { updatePlayer } from "../utilities/apiCalls";
+import { useState, useEffect } from "react";
 
-const Board = ({
-  playerScore,
-  setPlayerScore,
-  currentPlayers,
-  setCurrentPlayers,
-}) => {
+import { updatePlayer } from "../utilities/apiCalls";
+import { useNavigate } from "react-router";
+
+const Board = ({ currentPlayers, setCurrentPlayers }) => {
+  let navigate = useNavigate();
   const findPlayerByTurn = (data, turn) => {
     const foundPlayer = data.find((item) => item.player === turn);
     return foundPlayer;
@@ -31,9 +28,13 @@ const Board = ({
     { id: 8, row: 3, col: 3, value: 0 },
   ]);
   useEffect(() => {
-    setActivePlayer(() => findPlayerByTurn(currentPlayers, 1));
-  }, []);
+    currentPlayers.length !== 2 && navigate("/");
 
+    setActivePlayer(() => findPlayerByTurn(currentPlayers, 1));
+  }, [currentPlayers]);
+  const updateToLocal = (player) => {
+    localStorage.setItem(`Player${player.player}`, JSON.stringify(player));
+  };
   const changeTurn = (turn) => {
     setTurn(turn);
     setActivePlayer(() => findPlayerByTurn(currentPlayers, turn));
@@ -66,10 +67,11 @@ const Board = ({
       looser.data.gamesPlayed++;
       updatePlayer(winner);
       updatePlayer(looser);
+      updateToLocal(winner);
+      updateToLocal(looser);
       let newCurrentPlayers = [winner, looser];
       let sortedPlayers = newCurrentPlayers.sort((a, b) => a.player - b.player);
       setCurrentPlayers(sortedPlayers);
-      console.log("winner", winner, "looser", looser);
     };
 
     const isWinnerRowCol = (element) => {
@@ -120,7 +122,7 @@ const Board = ({
   };
 
   return (
-    <div className="  mt-10 bg-slate-400 flex flex-col">
+    <div className="  mt-10 bg-slate-400 flex flex-col rounded-md">
       <div className="flex justify-around "></div>
       <h1 className="text-center text-white p-5">
         {currentWinner
@@ -138,12 +140,12 @@ const Board = ({
         ))}
       </div>
       {!currentWinner ? (
-        <button className="p-10" onClick={reset}>
+        <button className="p-10  hover:bg-slate-300" onClick={reset}>
           Reset!
         </button>
       ) : (
         <button
-          className="p-10"
+          className="p-10  hover:bg-slate-300"
           onClick={() => {
             reset();
           }}
@@ -151,7 +153,6 @@ const Board = ({
           Play Again!
         </button>
       )}
-      <button>testy</button>
     </div>
   );
 };

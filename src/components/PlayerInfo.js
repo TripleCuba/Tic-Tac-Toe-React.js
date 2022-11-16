@@ -1,6 +1,9 @@
 import React from "react";
 
-const PlayerInfo = ({ currentPlayers }) => {
+const PlayerInfo = ({ currentPlayers, getCurrentPlayerFromLocal }) => {
+  const removePlayer = (player) => {
+    localStorage.removeItem(`Player${player.player}`);
+  };
   return (
     <div className="my-4 flex w-full justify-around">
       {currentPlayers.map((player) => (
@@ -21,6 +24,15 @@ const PlayerInfo = ({ currentPlayers }) => {
           <p>{player.data.score}</p>
           <h3>Games Played</h3>
           <p>{player.data.gamesPlayed}</p>
+          <button
+            className="w-full my-5 border rounded-md p-2 text-xs hover:bg-red-600"
+            onClick={() => {
+              removePlayer(player);
+              getCurrentPlayerFromLocal();
+            }}
+          >
+            Remove player {player.player}
+          </button>
         </div>
       ))}
     </div>

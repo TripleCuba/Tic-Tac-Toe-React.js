@@ -3,7 +3,11 @@ import React from "react";
 const Button = ({ item, changeScore, currentWinner }) => {
   return (
     <button
-      className="border w-titleW h-titleH"
+      className={`border w-titleW h-titleH ${
+        item.value === 0 && !currentWinner
+          ? "hover:bg-slate-300"
+          : "bg-slate-500"
+      }`}
       onClick={() => changeScore(item.id)}
       value={item.value}
       disabled={item.value > 0 ? true : currentWinner ? true : false}
